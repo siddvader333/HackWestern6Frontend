@@ -61,7 +61,7 @@ export default class extends React.Component {
 				console.log(body)
 				if(body.message){
 					//this.props.navigation.push('Registration')
-					this.props.navigation.push('Register', { utorid: this.state.userText, password: this.state.passText })
+					this.props.navigation.push('Register')
 
 					this.setState({
 						waiting: false

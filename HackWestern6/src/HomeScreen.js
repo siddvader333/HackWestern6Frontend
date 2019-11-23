@@ -60,7 +60,11 @@ export default class extends React.Component {
 				</Text>
 				<TalkingModal 
 					visible={this.state.visibleTalk} 
-					onPress={()=>{this.setState({visibleTalk:!this.state.visibleTalk})}} 
+					onPress={()=>{
+							this.setState({visibleTalk:!this.state.visibleTalk})
+							
+						}
+					} 
 					text={'Welcome aboard captain! Ready to start today\'s mission?'}
 				/>
 				<TouchableOpacity onPress={this.logoutAction} style={{padding:20, margin: 20, borderWidth:2, margin:15, borderColor:'rgba(0,0,0,0.5)', borderRadius:300}}>

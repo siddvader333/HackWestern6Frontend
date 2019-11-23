@@ -11,7 +11,8 @@ import {
 	RefreshControl,
 	Modal, 
 	TouchableOpacity, 
-	AsyncStorage
+	AsyncStorage,
+	Platform
 } from 'react-native'
 import route from '../api.js'
 
@@ -25,8 +26,8 @@ export default class extends React.Component {
 			userText: '', 
 			currentQuestion: 1, 
 			name: '', 
-			utorid: this.props.navigation.getParam('utorid',''),
-			password: this.props.navigation.getParam('password',''),
+			utorid: '',
+			password: '',
 			age: '', 
 			phone: '',
 			discipline: '',  
@@ -35,7 +36,7 @@ export default class extends React.Component {
 		}
 
 		this.nextQuestion = this.nextQuestion.bind(this); 
-		this.loginAction = this.loginAction.bind(this); 
+		this.registerAction = this.registerAction.bind(this); 
 		this.errorAction = this.errorAction.bind(this);
 	}
 
@@ -44,8 +45,8 @@ export default class extends React.Component {
 			userText: '',
 			currentQuestion: 1,
 			name: '',
-			utorid: this.props.navigation.dangerouslyGetParent().getParam('utorid',''),
-			password: this.props.navigation.dangerouslyGetParent().getParam('password',''),
+			utorid: '',
+			password: '',
 			age: '',
 			phone: '',
 			discipline: '',
@@ -55,7 +56,7 @@ export default class extends React.Component {
 
 	componentDidUpdate(prevProps, prevState){
 		if (!prevState.waiting && this.state.waiting){
-			this.nextQuestion()
+			this.registerAction()
 		}
 	}
 
@@ -66,7 +67,7 @@ export default class extends React.Component {
 			this.setState({
 				name: setValue,
 				userText: '',
-				currentQuestion: 4,
+				currentQuestion: 2,
 			})
 		}
 		else if (this.state.currentQuestion == 2){
@@ -114,37 +115,42 @@ export default class extends React.Component {
 				currentQuestion: 7,
 			})
 		}
-		else if (this.state.currentQuestion == 7){
-			this.loginAction(this.state.utorid, this.state.password); 
-		}
 	}
 
-	loginAction = async (u,p) => {
-		let response = await fetch(route('/login'), {
+	registerAction = async () => {
+		let response = await fetch(route('/register'), {
 			method: 'POST',
 			headers: {
 				Accept: 'application/json',
 				'Content-Type': 'application/json',
 			},
 			body: JSON.stringify({
-				utorid: u,
-				password: p,
+				utorid: this.state.utorid,
+				password: this.state.password,
+				name: this.state.name,
+				age: this.state.age,
+				phone: this.state.phone,
+				discipline: this.state.discipline,
 			})
 		})
 
+		let body = await response.json()
 		if(response.ok) {
-			let body = await response.json()
 			if(body.error){
 				this.errorAction(body.error)
-			}else{
-				await AsyncStorage.setItem('userToken', JSON.stringify(body))
+
 				this.setState({
 					waiting: false
 				})
-				this.props.navigation.navigate('App', { user: body })
+			}else{
+				await AsyncStorage.setItem('userToken', JSON.stringify(body))
+				this.props.navigation.navigate('App', { user: body, name: body.preferredname })
 			}
 		}else{
-			this.errorAction('Failed to fetch user info')
+			this.errorAction(body.error)
+			this.setState({
+				waiting: false
+			})
 		}
 	}
 
