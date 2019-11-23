@@ -22,9 +22,12 @@ export default class extends React.Component {
 
         // This will switch to the App screen or Auth screen and this loading
         // screen will be unmounted and thrown away.
-        if(userToken)
-		this.props.navigation.navigate('App', { user: JSON.parse(userToken) })
-        this.props.navigation.navigate('Auth');
+        if(userToken){
+            let temp = JSON.parse(userToken)
+		  this.props.navigation.navigate('App', { user: temp, name: temp.preferredName })
+        }else{
+            this.props.navigation.navigate('Auth');
+        }
     };
 
     // Render any loading content that you like here

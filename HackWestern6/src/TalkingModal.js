@@ -26,7 +26,6 @@ export default class extends React.Component {
 			<Modal
 				visible={this.props.visible}
 				animationType={'slide'}
-				onRequestClose={() => { this.setState({ visible: false }); }}
 				transparent={true}
 			>
 				<TouchableWithoutFeedback onPress={this.props.onPress} style={{flex:1, width:'100%'}}>

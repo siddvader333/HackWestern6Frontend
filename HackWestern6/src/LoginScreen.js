@@ -58,24 +58,31 @@ export default class extends React.Component {
 
 			if(response.ok) {
 				let body = await response.json()
+				console.log(body)
 				if(body.message){
 					//this.props.navigation.push('Registration')
-					this.props.navigation.navigate('Register', { utorid: this.state.userText, password: this.state.passText })
+					this.props.navigation.push('Register', { utorid: this.state.userText, password: this.state.passText })
+
+					this.setState({
+						waiting: false
+					})
 				}else{
 					await AsyncStorage.setItem('userToken', JSON.stringify(body))
-					this.props.navigation.navigate('App', { user: body })
+					this.props.navigation.navigate('App', { user: body, name: body.preferredName })
 				}
 			}else{
 				let body = await response.json()
+				console.log(body)
 				if(body)
 					this.errorAction(body.error)
 				else
 					this.errorAction('Failed to fetch user info')
+
+				this.setState({
+					waiting: false
+				})
 			}
 		}
-		this.setState({
-			waiting: false
-		})
 	}
 
 	componentDidMount(){

@@ -19,7 +19,7 @@ export default class extends React.Component {
 		super(props)
 
 		this.state = {
-			user: null,
+			user: this.props.navigation.dangerouslyGetParent().getParam('user',null),
 			visibleTalk:true,
 		}
 
@@ -28,7 +28,7 @@ export default class extends React.Component {
 
 	static navigationOptions = ({ navigation }) => {
 		return {
-			title: navigation.state.params ? navigation.state.params.user.utorid : 'Welcome On Board!'
+			title: navigation.dangerouslyGetParent().getParam('name','Welcome on Board!')
 		}
 	}
 
@@ -39,13 +39,21 @@ export default class extends React.Component {
 	}
 
 	componentDidMount(){
+		this.props.navigation.setParams({
+			name: this.props.navigation.dangerouslyGetParent().getParam('name',null)
+		})
 		this.setState({
-			user: this.props.navigation.state.params ? this.props.navigation.state.params.user : null,
+			user: this.props.navigation.dangerouslyGetParent().getParam('user',null),
 			visibleTalk:true,
 		})
 	}
 
+	componentDidUpdate(prevProps){
+
+	}
+
 	render () {
+		console.log(this.state.user)
 		return (
 			<SafeAreaView style={{backgroundColor:'rgba(0,0,0,0.01)',width:'100%',flex:1, justifyContent:'center', alignItems:'center', padding:20}}>
 				<Text style={styles.textStyle}>
