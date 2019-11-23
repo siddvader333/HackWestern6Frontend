@@ -186,7 +186,7 @@ export default class extends React.Component {
 			return (
 				<SafeAreaView style={{width:'100%',flex:1, backgroundColor:'rgba(0,0,0,0.01'}}>
 					<KeyboardAvoidingView style={{width:'100%',flex:1, justifyContent:'center', alignItems:'center', padding:20}} behaviour="padding">
-						<Text style={styles.question}>Here is your UTORid</Text>
+						<Text style={styles.question}>Please enter your UTORid</Text>
 						<TextInput
 							style={styles.formQuestion}
 							multiline={false} 
