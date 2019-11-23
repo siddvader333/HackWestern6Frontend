@@ -9,6 +9,7 @@ import {
 	ActivityIndicator,
 	KeyboardAvoidingView,
 	RefreshControl,
+	Modal, 
 	TouchableOpacity, 
 	AsyncStorage
 } from 'react-native'
@@ -29,12 +30,13 @@ export default class extends React.Component {
 			age: '', 
 			phone: '',
 			discipline: '',  
-			error: '', 
+			error: '',
+			waiting: null,  
 		}
 
 		this.nextQuestion = this.nextQuestion.bind(this); 
 		this.loginAction = this.loginAction.bind(this); 
-		this.errorAction = this.errorAction.bind(this)
+		this.errorAction = this.errorAction.bind(this);
 	}
 
 	componentDidMount(){
@@ -47,7 +49,14 @@ export default class extends React.Component {
 			age: '',
 			phone: '',
 			discipline: '',
+			waiting: false, 
 		})
+	}
+
+	componentDidUpdate(prevProps, prevState){
+		if (!prevState.waiting && this.state.waiting){
+			this.nextQuestion()
+		}
 	}
 
 	nextQuestion(){
@@ -129,6 +138,9 @@ export default class extends React.Component {
 				this.errorAction(body.error)
 			}else{
 				await AsyncStorage.setItem('userToken', JSON.stringify(body))
+				this.setState({
+					waiting: false
+				})
 				this.props.navigation.navigate('App', { user: body })
 			}
 		}else{
@@ -269,7 +281,7 @@ export default class extends React.Component {
 							}}
 						/>
 						<TouchableOpacity onPress={this.nextQuestion} style={{borderWidth:2, margin:15, borderColor:'rgba(0,0,0,0.5)', borderRadius:300}}>
-							<Text style={[styles.textStyle,{borderBottomWidth:0, margin:5}]}>Next</Text>
+							<Text style={[styles.textStyle,{borderBottomWidth:0, margin:5}]}>Continue</Text>
 						</TouchableOpacity>
 					</KeyboardAvoidingView>
 				</SafeAreaView>
@@ -291,9 +303,19 @@ export default class extends React.Component {
 						<Text></Text>
 						<Text style={styles.question}>Discipline: {this.state.discipline}</Text>
 						<Text></Text>
-						<TouchableOpacity onPress={this.nextQuestion} style={{borderWidth:2, margin:15, borderColor:'rgba(0,0,0,0.5)', borderRadius:300}}>
-							<Text style={[styles.textStyle,{borderBottomWidth:0, margin:5}]}>Continue</Text>
+						<TouchableOpacity onPress={() => {this.setState({waiting:true});}} style={{borderWidth:2, margin:15, borderColor:'rgba(0,0,0,0.5)', borderRadius:300}}>
+							<Text style={[styles.textStyle,{borderBottomWidth:0, margin:5}]}>Next</Text>
 						</TouchableOpacity>
+						<Modal
+							visible={this.state.waiting}
+							animationType={'none'}
+							onRequestClose={() => { this.setState({ waiting: false }); }}
+							transparent={true}
+						>
+							<View style={{flex:1, width:'100%', alignItems:'center', justifyContent:'center', backgroundColor:'rgba(0,0,0,0.5)'}}>
+								<ActivityIndicator size={Platform.OS === 'ios' ? 'large' : 40} color={'rgb(100,100,200)'}/>
+							</View>
+						</Modal>
 					</KeyboardAvoidingView>
 				</SafeAreaView>
 			)
