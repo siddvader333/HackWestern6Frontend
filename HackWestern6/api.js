@@ -1,0 +1,1 @@
+module.exports = (str) => "https://26282c36.ngrok.io" + str;

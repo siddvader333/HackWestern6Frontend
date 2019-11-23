@@ -17,13 +17,29 @@ export default class extends React.Component {
 	constructor(props){
 		super(props)
 
+		this.state = {
+			user: null
+		}
+
 		this.logoutAction = this.logoutAction.bind(this)
+	}
+
+	static navigationOptions = ({ navigation }) => {
+		return {
+			title: navigation.state.params ? navigation.state.params.user.utorid : 'Welcome On Board!'
+		}
 	}
 
 	logoutAction = async () => {
 		await AsyncStorage.removeItem('userToken');
 
 		this.props.navigation.navigate('Auth')
+	}
+
+	componentDidMount(){
+		this.setState({
+			user: this.props.navigation.state.params ? this.props.navigation.state.params.user : null
+		})
 	}
 
 	render () {
