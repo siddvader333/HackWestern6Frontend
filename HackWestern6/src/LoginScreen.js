@@ -5,11 +5,9 @@ import {
 	View,
 	SafeAreaView,
 	StyleSheet,
-	ScrollView,
-	ActivityIndicator,
 	KeyboardAvoidingView,
-	RefreshControl,
-	TouchableOpacity
+	TouchableOpacity,
+	AsyncStorage
 } from 'react-native'
 
 export default class extends React.Component {
@@ -23,10 +21,29 @@ export default class extends React.Component {
 		}
 
 		this.loginAction = this.loginAction.bind(this)
+		this.errorAction = this.errorAction.bind(this)
 	}
 
-	loginAction(){
+	errorAction(error){
+		this.setState({
+			error
+		})
+	}
+
+	loginAction = async () => {
 		// do something with userText and passText
+		// temporary!!!!
+		if(!this.state.userText)
+			this.errorAction('UTorID is Empty')
+		else if(!this.state.passText)
+			this.errorAction('Password is Empty')
+		else{
+
+			// 	Put this next line in daniel's commit
+			//	await AsyncStorage.setItem('userToken', this.state.userText, this.errorAction('Failed to save user'));
+			//	this.props.navigation.navigate('App')
+			//this.props.navigation.push('Registration')
+		}
 	}
 
 	componentDidMount(){
@@ -59,6 +76,9 @@ export default class extends React.Component {
 							this.setState({ passText: text });
 						}}
 					/>
+					<View style={this.state.error ? {padding:5,margin:10,width:'80%'} : {}}>
+						<Text style={{fontSize:18, color:'rgba(200,100,100,0.9)'}}>{this.state.error}</Text>
+					</View>
 					<TouchableOpacity onPress={this.loginAction} style={{borderWidth:2, margin:15, borderColor:'rgba(0,0,0,0.5)', borderRadius:300}}>
 						<Text style={[styles.textStyle,{borderBottomWidth:0, margin:5}]}>Login or Signup</Text>
 					</TouchableOpacity>
