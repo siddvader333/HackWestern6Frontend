@@ -32,6 +32,19 @@ export default class extends React.Component {
 		this.nextQuestion = this.nextQuestion.bind(this); 
 	}
 
+	componentDidMount(){
+		this.setState({
+			userText: '',
+			currentQuestion: 1,
+			name: '',
+			utorid: this.props.navigation.getParam('utorid',''),
+			password: this.props.navigation.getParam('password',''),
+			age: '',
+			phone: '',
+			discipline: '',
+		})
+	}
+
 	nextQuestion(){
 		if (this.state.currentQuestion == 1){
 			//save name, ask for utorid

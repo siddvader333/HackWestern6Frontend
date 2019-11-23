@@ -60,7 +60,7 @@ export default class extends React.Component {
 				let body = await response.json()
 				if(body.message){
 					//this.props.navigation.push('Registration')
-					this.errorAction(body.message)
+					this.props.navigation.navigate('Register', { utorid: this.state.userText, password: this.state.passText })
 				}else if(body.error){
 					this.errorAction(body.error)
 				}else{
