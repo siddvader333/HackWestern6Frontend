@@ -1,6 +1,5 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
-<<<<<<< HEAD
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import LoginScreen from './src/LoginScreen.js'
@@ -34,15 +33,6 @@ export default function App() {
     return (
         <AppContainer />
     );
-=======
-
-export default function App() {
-  return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
-    </View>
-  );
->>>>>>> Revert "Added a basic login screen"
 }
 
 const styles = StyleSheet.create({
