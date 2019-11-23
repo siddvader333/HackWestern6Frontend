@@ -65,8 +65,8 @@ export default class extends Component {
 }
 
 shoppingAction = async() => {
+// get the user information such as UTorID and gold/PNP points
 
-    
 
 }
 
