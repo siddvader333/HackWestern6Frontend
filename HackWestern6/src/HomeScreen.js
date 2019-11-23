@@ -62,7 +62,7 @@ export default class extends React.Component {
 					visible={this.state.visibleTalk} 
 					onPress={()=>{
 							this.setState({visibleTalk:!this.state.visibleTalk})
-							
+
 						}
 					} 
 					text={'Welcome aboard captain! Ready to start today\'s mission?'}
@@ -70,6 +70,14 @@ export default class extends React.Component {
 				<TouchableOpacity onPress={this.logoutAction} style={{padding:20, margin: 20, borderWidth:2, margin:15, borderColor:'rgba(0,0,0,0.5)', borderRadius:300}}>
 					<Text>
 						Logout
+					</Text>
+				</TouchableOpacity>
+
+				<TouchableOpacity onPress={() => {
+					this.props.navigation.push('Store', { user: this.state.user })
+				}} style={{padding:20, margin: 20, borderWidth:2, margin:15, borderColor:'rgba(0,0,0,0.5)', borderRadius:300}}>
+					<Text>
+						Go to Store
 					</Text>
 				</TouchableOpacity>
 			</SafeAreaView>

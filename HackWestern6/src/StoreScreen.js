@@ -17,6 +17,7 @@ export default class extends Component {
    constructor(props) {
       super(props) //since we are extending class store so we have to use super in order to override Component class constructor
       this.state = { 
+        user: this.props.navigation.getParam('user',null),
         storeAttributes: ['Store ID', 'Name', 'Rubies', 'Description'],
         artifacts: [
             [ 1, 'TrueBlues mascot head', 500, 'Wearing this will make you stronger than neckbeards love for Jordan Peterson' ],
@@ -25,6 +26,12 @@ export default class extends Component {
             [ 4, 'Moondust', 50, 'The real reason NASA wanted to go to the moon' ]
          ]
       }
+   }
+
+   componentDidMounts(){
+      this.setState({
+          user: this.props.navigation.getParam('user',null)
+      })
    }
    
    render() {
