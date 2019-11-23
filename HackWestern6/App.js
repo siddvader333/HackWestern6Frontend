@@ -5,7 +5,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import LoginScreen from './src/LoginScreen.js'
 import HomeScreen from './src/HomeScreen.js'
 import AuthLoadingScreen from './src/AuthLoadingScreen.js'
-import RegisterScreen from './src/Profile.js'
+import RegisterScreen from './src/RegisterScreen.js'
 
 const AppStack = createStackNavigator({ 
     Home: HomeScreen 
