@@ -61,18 +61,17 @@ export default class extends React.Component {
 				if(body.message){
 					//this.props.navigation.push('Registration')
 					this.props.navigation.navigate('Register', { utorid: this.state.userText, password: this.state.passText })
-				}else if(body.error){
-					this.errorAction(body.error)
 				}else{
 					await AsyncStorage.setItem('userToken', JSON.stringify(body))
 					this.props.navigation.navigate('App', { user: body })
 				}
 			}else{
-				this.errorAction('Failed to fetch user info')
+				let body = await response.json()
+				if(body)
+					this.errorAction(body.error)
+				else
+					this.errorAction('Failed to fetch user info')
 			}
-			// 	Put this next line in daniel's commit
-			//	await AsyncStorage.setItem('userToken', this.state.userText, this.errorAction('Failed to save user'));
-			//	this.props.navigation.navigate('App')
 		}
 		this.setState({
 			waiting: false

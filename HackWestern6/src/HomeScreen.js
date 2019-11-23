@@ -12,13 +12,15 @@ import {
 	TouchableOpacity,
 	AsyncStorage,
 } from 'react-native'
+import TalkingModal from './TalkingModal.js'
 
 export default class extends React.Component {
 	constructor(props){
 		super(props)
 
 		this.state = {
-			user: null
+			user: null,
+			visibleTalk:true,
 		}
 
 		this.logoutAction = this.logoutAction.bind(this)
@@ -38,7 +40,8 @@ export default class extends React.Component {
 
 	componentDidMount(){
 		this.setState({
-			user: this.props.navigation.state.params ? this.props.navigation.state.params.user : null
+			user: this.props.navigation.state.params ? this.props.navigation.state.params.user : null,
+			visibleTalk:true,
 		})
 	}
 
@@ -48,6 +51,11 @@ export default class extends React.Component {
 				<Text style={styles.textStyle}>
 					What it do babyyy
 				</Text>
+				<TalkingModal 
+					visible={this.state.visibleTalk} 
+					onPress={()=>{this.setState({visibleTalk:!this.state.visibleTalk})}} 
+					text={'Welcome aboard captain! Ready to start today\'s mission?'}
+				/>
 				<TouchableOpacity onPress={this.logoutAction} style={{padding:20, margin: 20, borderWidth:2, margin:15, borderColor:'rgba(0,0,0,0.5)', borderRadius:300}}>
 					<Text>
 						Logout
