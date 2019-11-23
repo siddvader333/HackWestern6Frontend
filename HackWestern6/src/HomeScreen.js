@@ -53,7 +53,6 @@ export default class extends React.Component {
 	}
 
 	render () {
-		console.log(this.state.user)
 		return (
 			<SafeAreaView style={{backgroundColor:'rgba(0,0,0,0.01)',width:'100%',flex:1, justifyContent:'center', alignItems:'center', padding:20}}>
 				<Text style={styles.textStyle}>
