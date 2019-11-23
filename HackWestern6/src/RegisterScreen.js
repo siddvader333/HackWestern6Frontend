@@ -9,8 +9,10 @@ import {
 	ActivityIndicator,
 	KeyboardAvoidingView,
 	RefreshControl,
-	TouchableOpacity
+	TouchableOpacity, 
+	AsyncStorage
 } from 'react-native'
+import route from '../api.js'
 
 export default class extends React.Component {
 
@@ -22,14 +24,17 @@ export default class extends React.Component {
 			userText: '', 
 			currentQuestion: 1, 
 			name: '', 
-			utorid: '', 
-			password: '', 
+			utorid: this.props.navigation.getParam('utorid',''),
+			password: this.props.navigation.getParam('password',''),
 			age: '', 
 			phone: '',
 			discipline: '',  
+			error: '', 
 		}
 
 		this.nextQuestion = this.nextQuestion.bind(this); 
+		this.loginAction = this.loginAction.bind(this); 
+		this.errorAction = this.errorAction.bind(this)
 	}
 
 	componentDidMount(){
@@ -52,7 +57,7 @@ export default class extends React.Component {
 			this.setState({
 				name: setValue,
 				userText: '',
-				currentQuestion: 2,
+				currentQuestion: 4,
 			})
 		}
 		else if (this.state.currentQuestion == 2){
@@ -101,12 +106,40 @@ export default class extends React.Component {
 			})
 		}
 		else if (this.state.currentQuestion == 7){
-			//link to some other page
-			this.setState({
-				userText: '', 
-				currentQuestion: 1
-			})
+			this.loginAction(this.state.utorid, this.state.password); 
 		}
+	}
+
+	loginAction = async (u,p) => {
+		let response = await fetch(route('/login'), {
+			method: 'POST',
+			headers: {
+				Accept: 'application/json',
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				utorid: u,
+				password: p,
+			})
+		})
+
+		if(response.ok) {
+			let body = await response.json()
+			if(body.error){
+				this.errorAction(body.error)
+			}else{
+				await AsyncStorage.setItem('userToken', JSON.stringify(body))
+				this.props.navigation.navigate('App', { user: body })
+			}
+		}else{
+			this.errorAction('Failed to fetch user info')
+		}
+	}
+
+	errorAction(error){
+		this.setState({
+			error
+		})
 	}
 
 	render () {
@@ -135,13 +168,13 @@ export default class extends React.Component {
 			return (
 				<SafeAreaView style={{width:'100%',flex:1, backgroundColor:'rgba(0,0,0,0.01'}}>
 					<KeyboardAvoidingView style={{width:'100%',flex:1, justifyContent:'center', alignItems:'center', padding:20}} behaviour="padding">
-						<Text style={styles.question}>Please input your UTORid</Text>
+						<Text style={styles.question}>Here is your UTORid</Text>
 						<TextInput
 							style={styles.formQuestion}
 							multiline={false} 
 							placeholder={'UTORid'} 
-              value={this.state.userText}
-              maxLength = {8}
+							value={this.state.userText}
+							maxLength = {8}
 							onChangeText={text=>{
 								this.setState({userText:text});
 							}}
