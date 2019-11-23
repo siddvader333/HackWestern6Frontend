@@ -127,7 +127,8 @@ export default class extends React.Component {
 							style={styles.formQuestion}
 							multiline={false} 
 							placeholder={'UTORid'} 
-							value={this.state.userText}
+              value={this.state.userText}
+              maxLength = {8}
 							onChangeText={text=>{
 								this.setState({userText:text});
 							}}
@@ -170,7 +171,9 @@ export default class extends React.Component {
 							style={styles.formQuestion}
 							multiline={false} 
 							placeholder={'Age (ex. 18)'} 
-							value={this.state.userText}
+              value={this.state.userText}
+              maxLength = {3}
+              keyboardType={'numeric'}
 							onChangeText={text=>{
 								this.setState({userText:text});
 							}}
@@ -191,7 +194,9 @@ export default class extends React.Component {
 							style={styles.formQuestion}
 							multiline={false} 
 							placeholder={'Phone Number (ex. 0123456789)'} 
-							value={this.state.userText}
+              value={this.state.userText}
+              maxLength = {10}
+              keyboardType={'numeric'}
 							onChangeText={text=>{
 								this.setState({userText:text});
 							}}
