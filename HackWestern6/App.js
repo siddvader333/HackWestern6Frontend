@@ -5,13 +5,15 @@ import { createStackNavigator } from 'react-navigation-stack';
 import LoginScreen from './src/LoginScreen.js'
 import HomeScreen from './src/HomeScreen.js'
 import AuthLoadingScreen from './src/AuthLoadingScreen.js'
+import RegisterScreen from './src/Profile.js'
 
 const AppStack = createStackNavigator({ 
     Home: HomeScreen 
 });
 
 const AuthStack = createStackNavigator({ 
-    Login: LoginScreen 
+    Login: LoginScreen, 
+    Register: RegisterScreen
 });
 
 const AppContainer = createAppContainer(
