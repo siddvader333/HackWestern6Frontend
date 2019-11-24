@@ -99,6 +99,21 @@ export default class extends React.Component {
 				>
 					<Text>sup</Text>
 				</TouchableOpacity>
+				<TouchableOpacity
+					style={{
+						padding: 20,
+						margin: 20,
+						borderWidth: 2,
+						margin: 15,
+						borderColor: 'rgba(0,0,0,0.5)',
+						borderRadius: 300
+					}}
+					onPress={() => {
+						this.props.navigation.push('AsteroidList', { user: this.state.user });
+					}}
+				>
+					<Text>sup2</Text>
+				</TouchableOpacity>
 
 				<TouchableOpacity
 					onPress={() => {

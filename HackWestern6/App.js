@@ -9,12 +9,14 @@ import RegisterScreen from './src/RegisterScreen.js';
 import StoreScreen from './src/StoreScreen.js';
 import AsteroidDetectionScreen from './src/AsteroidDetectionScreen.js';
 import CameraScreen from './src/CameraFeed.js';
+import AsteroidListScreen from './src/AsteroidListScreen.js';
 
 const AppStack = createStackNavigator({
 	Home: HomeScreen,
 	Store: StoreScreen,
 	AsteroidDetection: AsteroidDetectionScreen,
-	Camera: CameraScreen
+	Camera: CameraScreen,
+	AsteroidList: AsteroidListScreen
 });
 
 const AuthStack = createStackNavigator({
