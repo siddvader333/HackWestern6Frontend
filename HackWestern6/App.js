@@ -13,6 +13,7 @@ const AppStack = createStackNavigator({
     Home: HomeScreen,
     Store: StoreScreen,
     Camera: CameraScreen,
+
 });
 
 const AuthStack = createStackNavigator({ 
@@ -28,7 +29,7 @@ const AppContainer = createAppContainer(
         Auth: AuthStack,
     },
     {
-        initialRouteName: 'AuthLoading',
+        initialRouteName: 'App',
     }
 )
 );
