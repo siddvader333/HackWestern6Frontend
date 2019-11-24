@@ -13,12 +13,13 @@ export default class extends React.Component {
 			asteroidValue: 0,
 			showModal: false,
 			modalText: '',
-			user: this.props.navigation.getParam('user', null)
+			user: this.props.navigation.dangerouslyGetParent().dangerouslyGetParent().getParam('user',null)
 		};
 	}
 
 	addAsteroid = async () => {
 		//check if valid input
+		let temp_user = this.props.navigation.dangerouslyGetParent().dangerouslyGetParent().getParam('user',null)
 		if (this.state.asteroidName !== '' && typeof Number(this.state.asteroidValue) == 'number') {
 			//if valid input, make api call, show modal, set modal text to confirmation
 			let response = await fetch(route('/addAsteroid'), {
@@ -28,7 +29,7 @@ export default class extends React.Component {
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
-					utorid: this.state.user.user.utorid,
+					utorid: temp_user.utorid,
 					asteroidName: this.state.asteroidName,
 					asteroidDate: this.state.asteroidDate,
 					value: this.state.asteroidValue

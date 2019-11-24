@@ -19,7 +19,7 @@ export default class extends React.Component {
 		super(props);
 
 		this.state = {
-			user: this.props.navigation.dangerouslyGetParent().getParam('user', null),
+			user: this.props.navigation.dangerouslyGetParent().dangerouslyGetParent().getParam('user', null),
 			visibleTalk: true
 		};
 
@@ -34,10 +34,10 @@ export default class extends React.Component {
 
 	componentDidMount() {
 		this.props.navigation.setParams({
-			name: this.props.navigation.dangerouslyGetParent().getParam('name', null)
+			name: this.props.navigation.dangerouslyGetParent().dangerouslyGetParent().getParam('name', null)
 		});
 		this.setState({
-			user: this.props.navigation.dangerouslyGetParent().getParam('user', null),
+			user: this.props.navigation.dangerouslyGetParent().dangerouslyGetParent().getParam('user', null),
 			visibleTalk: true
 		});
 	}

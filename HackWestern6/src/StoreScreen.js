@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 import { Table, TableWrapper, Row, Rows, Col } from 'react-native-table-component';
 import route from '../api.js';
+import TalkingModal from './TalkingModal.js'
 
 const rhino_pic = (<Image key = '0' source={require('../assets/Rhino.png')} resizeMode="cover"/>)
 const z_saber_pic = <Image key = '1' source={require('../assets/Z-saber.png')} resizeMode="cover"/>
@@ -23,7 +24,8 @@ export default class extends Component {
    constructor(props) {
       super(props);
       this.state = { 
-        user: this.props.navigation.getParam('user',null),
+        talkText: '',
+        user: this.props.navigation.dangerouslyGetParent().dangerouslyGetParent().getParam('user',null),
         storeAttributes: ['Artifacts!'],
         index:'0',
 
@@ -73,9 +75,9 @@ export default class extends Component {
         if(!this.state.user){
             console.log("Error1")
         }
-        
-        if(this.state.user.user.questData.gold < this.state.cost[this.state.index]){
-            console.log("User doesn't have enough money")
+
+        if(this.state.user.questData.gold < this.state.costs[this.state.index]){
+            this.setState({ talkText: 'You don\'t have enough gold to buy this!' })
         }
         // do error handling
         else{
@@ -90,18 +92,25 @@ export default class extends Component {
                 item: this.state.names[this.state.index],
                 cost: this.state.costs[this.state.index],
                 img: this.state.artifacts[this.state.index][0],
-                utorid: this.state.user.user.utorid 
+                utorid: this.state.user.utorid 
                 })
             })
+        let temp = await response.json()
             if(response.ok){
-                console.log(body)
+                this.setState({
+                  talkText: temp.message
+                })
+            }else{
+                this.setState({
+                  talkText: temp.error
+                })
             }
         }
     }
 
    componentDidMount(){
       this.setState({
-          user: this.props.navigation.getParam('user',null)
+        user: this.props.navigation.dangerouslyGetParent().dangerouslyGetParent().getParam('user',null)
       })
    }
    
@@ -121,6 +130,13 @@ export default class extends Component {
                     </Table>
                     </ScrollView>
                     </Table>
+                    <TalkingModal
+                      visible={this.state.talkText ? true : false}
+                      onPress={() => {
+                        this.setState({ talkText: '' });
+                      }}
+                      text={this.state.talkText}
+                    />
                 </View>
         </ScrollView>
        )
