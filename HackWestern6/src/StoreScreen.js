@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { 
 	Text,
-	TextInput,
+    TextInput,
     View,
     Image,
 	SafeAreaView,
@@ -64,7 +64,9 @@ export default class extends Component {
             '2':'Boltace',
             '3':'Longsword',
             '4':'Watermelon'
-         }
+         },
+         showModal:false, 
+         modal_text:''
       }
       this.shoppingAction = this.shoppingAction.bind(this)
    }
@@ -119,6 +121,13 @@ export default class extends Component {
        return(
         <ScrollView vertical={true}>
             <View style = {styles.container}>
+                    <TalkingModal
+						visible={this.state.showModal}
+						onPress={() => {
+							this.setState({ showModal: !this.state.showModal });
+						}}
+						text={this.state.modalText}
+					/>
                     <Text textStyle ={styles.text}>Welcome to the Store!</Text>
                     <Table borderStyle={{borderWidth: 1, borderColor: '#C1C0B9'}}>
                     <ScrollView style={styles.dataWrapper}>
