@@ -26,12 +26,6 @@ export default class extends React.Component {
 		this.logoutAction = this.logoutAction.bind(this);
 	}
 
-	static navigationOptions = ({ navigation }) => {
-		return {
-			title: navigation.dangerouslyGetParent().getParam('name', 'Welcome on Board!')
-		};
-	};
-
 	logoutAction = async () => {
 		await AsyncStorage.removeItem('userToken');
 
