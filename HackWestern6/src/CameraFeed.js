@@ -100,6 +100,17 @@ export default class CameraExample extends React.Component {
 					})
 				});
 
+				response = await fetch(route('/completedMorningTasks'), {
+					method: 'POST',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						utorid: this.state.user.utorid
+					})
+				});
+
 				this.props.navigation.dangerouslyGetParent().setParams({user: temp_user})
 			}else
 				this.setState({
