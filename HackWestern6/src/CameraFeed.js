@@ -1,18 +1,125 @@
 import React from 'react';
-import { Text, View, TouchableOpacity } from 'react-native';
+import { Text, View, TouchableOpacity, ActivityIndicator, Modal, Platform } from 'react-native';
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
+import route from '../api.js'
 
 export default class CameraExample extends React.Component {
-  state = {
-    hasCameraPermission: null,
-    type: Camera.Constants.Type.back,
-  };
+	constructor(props){
+		super(props)
+
+		this.state = {
+		    hasCameraPermission: null,
+		    type: Camera.Constants.Type.back,
+		    waiting: null,
+		};
+
+		this.snap = this.snap.bind(this)
+	}
+
+	snap = async () => {
+		if (this.camera) {
+			let { base64 } = await this.camera.takePictureAsync({ base64: true });
+
+			// let response = await fetch(route('/isFood'), {
+			// 	method: 'POST',
+			// 	headers: {
+			// 	    Accept: 'application/json',
+			// 	    'Content-Type': 'application/json',
+			// 	},
+			// 	body: JSON.stringify({
+			// 		image: base64
+			// 	})
+			// })
+
+			const data = {
+				requests: [
+					{
+						image: {
+							content: base64
+						},
+						features: [
+							{
+								type: 'LABEL_DETECTION',
+								maxResults: 10
+							}
+						]
+					}
+				]
+			};
+
+			let isFood = false;
+
+			const resp = await fetch('https://vision.googleapis.com/v1/images:annotate?key=' + 'AIzaSyBkJGBKyJPO58AuQ1QGvguIpgF4Usq46ds', {
+				method: 'POST',
+				headers: {
+					Accept: 'application/json',
+					'Content-Type': 'application/json'
+				},
+				body: JSON.stringify(data)
+			});
+
+			const respJSON = await resp.json();
+
+			if(!respJSON){
+				alert('Error!')
+				this.setState({
+					waiting:false
+				})
+				return
+			}
+
+			for (let i = 0; i < respJSON.responses[0].labelAnnotations.length; i++) {
+				if (respJSON.responses[0].labelAnnotations[i].description == 'Food') {
+					isFood = true
+				}
+			}
+
+			if(isFood)
+				alert('That\'s food!')
+			else
+				alert('That\'s not food!')
+
+			this.setState({
+				waiting:false
+			})
+
+			// if(response.ok) {
+			// 	let body = await response.json()
+			// 	if(body.isFood){
+			// 		alert('That\'s Food!')
+			// 		this.setState({
+			// 			waiting: false
+			// 		})
+					
+			// 	}else{
+			// 		alert('That\'s Not Food!')
+			// 		this.setState({
+			// 			waiting: false
+			// 		})
+			// 	}
+			// }else{
+			// 	alert('Failed Connecting to Services')
+			// 	this.setState({
+			// 		waiting: false
+			// 	})
+			// }
+		}
+	};
 
   async componentDidMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
-    this.setState({ hasCameraPermission: status === 'granted' });
+    this.setState({ 
+    	hasCameraPermission: status === 'granted',
+		type: Camera.Constants.Type.back,
+		waiting: false, 
+	});
   }
+
+  	componentDidUpdate(prevProps, prevState){
+  		if(prevState.waiting != this.state.waiting && this.state.waiting)
+  			this.snap()
+  	}
 
   render() {
     const { hasCameraPermission } = this.state;
@@ -23,31 +130,45 @@ export default class CameraExample extends React.Component {
     } else {
       return (
         <View style={{ flex: 1 }}>
-          <Camera style={{ flex: 1 }} type={this.state.type}>
+			<Camera
+				style={{ flex: 1 }} type={this.state.type}
+				ref={ref => {
+					this.camera = ref;
+				}}
+			>
             <View
               style={{
                 flex: 1,
+                width:'100%',
                 backgroundColor: 'transparent',
-                flexDirection: 'row',
               }}>
-              <TouchableOpacity
+              	<TouchableOpacity
                 style={{
-                  flex: 0.1,
+                  flex: 1,
+                  width:'100%',
                   alignSelf: 'flex-end',
                   alignItems: 'center',
                 }}
                 onPress={() => {
                   this.setState({
-                    type:
-                      this.state.type === Camera.Constants.Type.back
-                        ? Camera.Constants.Type.front
-                        : Camera.Constants.Type.back,
+                    waiting:true
                   });
                 }}>
-                <Text style={{ fontSize: 18, marginBottom: 10, color: 'white' }}> Flip </Text>
+              
+                <View />
               </TouchableOpacity>
             </View>
           </Camera>
+          	<Modal
+				visible={this.state.waiting}
+				animationType={'none'}
+				onRequestClose={() => { this.setState({ waiting: false }); }}
+				transparent={true}
+			>
+				<View style={{flex:1, width:'100%', alignItems:'center', justifyContent:'center', backgroundColor:'rgba(0,0,0,0.5)'}}>
+					<ActivityIndicator size={Platform.OS === 'ios' ? 'large' : 40} color={'rgb(100,100,200)'}/>
+				</View>
+			</Modal>
         </View>
       );
     }
