@@ -3,6 +3,7 @@ import { Text, View, TouchableOpacity, ActivityIndicator, Modal, Platform } from
 import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 import route from '../api.js'
+import TalkingModal from './TalkingModal.js'
 
 export default class CameraExample extends React.Component {
 	constructor(props){
@@ -12,6 +13,8 @@ export default class CameraExample extends React.Component {
 		    hasCameraPermission: null,
 		    type: Camera.Constants.Type.back,
 		    waiting: null,
+			user: this.props.navigation.dangerouslyGetParent().getParam('user', null),
+			talkText: '',
 		};
 
 		this.snap = this.snap.bind(this)
@@ -61,9 +64,11 @@ export default class CameraExample extends React.Component {
 
 			const respJSON = await resp.json();
 
+			let temp_user = this.state.user;
+
 			if(!respJSON){
-				alert('Error!')
 				this.setState({
+					talkText:'Error!',
 					waiting:false
 				})
 				return
@@ -75,10 +80,31 @@ export default class CameraExample extends React.Component {
 				}
 			}
 
-			if(isFood)
-				alert('That\'s food!')
-			else
-				alert('That\'s not food!')
+			if(isFood){
+				temp_user.completedMorningTasks = true
+				temp_user.questData.gold += 10
+				this.setState({
+					talkText: 'That\'s food! You received ten (10) gold!',
+					user: temp_user
+				})
+
+				let response = await fetch(route('/addGold'), {
+					method: 'POST',
+					headers: {
+						Accept: 'application/json',
+						'Content-Type': 'application/json'
+					},
+					body: JSON.stringify({
+						utorid: this.state.user.utorid,
+						goldToAdd: 10
+					})
+				});
+
+				this.props.navigation.dangerouslyGetParent().setParams({user: temp_user})
+			}else
+				this.setState({
+					talkText: 'That\'s not food!'
+				})
 
 			this.setState({
 				waiting:false
@@ -113,6 +139,7 @@ export default class CameraExample extends React.Component {
     	hasCameraPermission: status === 'granted',
 		type: Camera.Constants.Type.back,
 		waiting: false, 
+		user: this.props.navigation.dangerouslyGetParent().getParam('user', null),
 	});
   }
 
@@ -169,6 +196,15 @@ export default class CameraExample extends React.Component {
 					<ActivityIndicator size={Platform.OS === 'ios' ? 'large' : 40} color={'rgb(100,100,200)'}/>
 				</View>
 			</Modal>
+			<TalkingModal
+              visible={this.state.talkText ? true : false}
+              onPress={() => {
+                this.setState({ talkText: '' });
+                if(this.state.user.completedMorningTasks)
+			this.props.navigation.goBack()
+              }}
+              text={this.state.talkText}
+            />
         </View>
       );
     }

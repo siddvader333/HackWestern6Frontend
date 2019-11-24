@@ -33,16 +33,16 @@ export default class extends React.Component {
 	};
 
 	componentDidMount() {
-		this.props.navigation.setParams({
-			name: this.props.navigation.dangerouslyGetParent().dangerouslyGetParent().getParam('name', null)
-		});
 		this.setState({
 			user: this.props.navigation.dangerouslyGetParent().dangerouslyGetParent().getParam('user', null),
 			visibleTalk: true
 		});
 	}
 
-	componentDidUpdate(prevProps) {}
+	componentDidUpdate(prevProps) {
+		if(prevProps.navigation.dangerouslyGetParent().getParam('user',null) != this.props.navigation.dangerouslyGetParent().getParam('user',null))
+			this.setState({ user: this.props.navigation.dangerouslyGetParent().getParam('user',null) })
+	}
 
 	render() {
 		return (
@@ -58,12 +58,12 @@ export default class extends React.Component {
 			>
 				<Text style={styles.textStyle}>What it do babyyy</Text>
 				<TalkingModal
-					visible={this.state.visibleTalk}
+					visible={!this.state.user.completedMorningTasks && this.state.visibleTalk}
 					onPress={() => {
 						this.setState({ visibleTalk: !this.state.visibleTalk });
 						this.props.navigation.push('Camera');
 					}}
-					text={"Welcome aboard captain! Ready to start today's mission?"}
+					text={"Welcome aboard captain! Why not post a picture of breakfast to prepare for battle?"}
 				/>
 				<TouchableOpacity
 					onPress={this.logoutAction}

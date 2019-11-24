@@ -6,6 +6,7 @@ import {
     StyleSheet,
 	View,
 } from 'react-native';
+import route from '../api.js'
 
 export default class extends React.Component {
 	constructor(props){
@@ -24,7 +25,25 @@ export default class extends React.Component {
         // screen will be unmounted and thrown away.
         if(userToken){
             let temp = JSON.parse(userToken)
-		  this.props.navigation.navigate('App', { user: temp, name: temp.preferredName })
+
+            let response = await fetch(route('/user'), {
+                method: 'POST',
+                headers: {
+                    Accept: 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    utorid: temp.utorid,
+                    hashedPassword: temp.password
+                })
+            });
+
+            if(response.ok){
+                let body = await response.json()
+                this.props.navigation.navigate('App', { user: body, name: body.preferredName })
+            }else{
+                this.props.navigation.navigate('App', { user: temp, name: temp.preferredName })
+            }
         }else{
             this.props.navigation.navigate('Auth');
         }
@@ -33,8 +52,8 @@ export default class extends React.Component {
     // Render any loading content that you like here
     render() {
         return (
-            <View>
-                <ActivityIndicator />
+            <View style={{alignItems:'center', justifyContent:'center'}}>
+                <ActivityIndicator size="large"/>
                 <StatusBar barStyle="default" />
             </View>
         );
