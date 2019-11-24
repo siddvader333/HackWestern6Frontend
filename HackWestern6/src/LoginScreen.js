@@ -59,14 +59,15 @@ export default class extends React.Component {
 				console.log(body);
 				if (body.message) {
 					//this.props.navigation.push('Registration')
-					this.props.navigation.push('Register');
+					this.props.navigation.navigate('Register')
 
 					this.setState({
 						waiting: false
-					});
-				} else {
-					await AsyncStorage.setItem('userToken', JSON.stringify(body));
-					this.props.navigation.navigate('App', { user: body, name: body.preferredName });
+					})
+				}else{
+					console.log(body)
+					await AsyncStorage.setItem('userToken', JSON.stringify(body))
+					this.props.navigation.navigate('App', { user: body, name: body.preferredName })
 				}
 			} else {
 				let body = await response.json();
