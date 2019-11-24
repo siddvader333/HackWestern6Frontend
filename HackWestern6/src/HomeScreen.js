@@ -62,7 +62,7 @@ export default class extends React.Component {
 					visible={this.state.visibleTalk} 
 					onPress={()=>{
 							this.setState({visibleTalk:!this.state.visibleTalk})
-
+							this.props.navigation.push('Camera')
 						}
 					} 
 					text={'Welcome aboard captain! Ready to start today\'s mission?'}

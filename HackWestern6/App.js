@@ -7,10 +7,12 @@ import HomeScreen from './src/HomeScreen.js'
 import AuthLoadingScreen from './src/AuthLoadingScreen.js'
 import RegisterScreen from './src/RegisterScreen.js'
 import StoreScreen from './src/StoreScreen.js'
+import CameraScreen from './src/CameraFeed.js'
 
 const AppStack = createStackNavigator({ 
     Home: HomeScreen,
-    Store: StoreScreen
+    Store: StoreScreen,
+    Camera: CameraScreen,
 });
 
 const AuthStack = createStackNavigator({ 
