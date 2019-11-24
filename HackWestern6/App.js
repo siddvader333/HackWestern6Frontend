@@ -2,46 +2,46 @@ import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { createAppContainer, createSwitchNavigator } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
-import LoginScreen from './src/LoginScreen.js'
-import HomeScreen from './src/HomeScreen.js'
-import AuthLoadingScreen from './src/AuthLoadingScreen.js'
-import RegisterScreen from './src/RegisterScreen.js'
-import StoreScreen from './src/StoreScreen.js'
+import LoginScreen from './src/LoginScreen.js';
+import HomeScreen from './src/HomeScreen.js';
+import AuthLoadingScreen from './src/AuthLoadingScreen.js';
+import RegisterScreen from './src/RegisterScreen.js';
+import StoreScreen from './src/StoreScreen.js';
+import AsteroidDetectionScreen from './src/AsteroidDetectionScreen.js';
 
-const AppStack = createStackNavigator({ 
-    Home: HomeScreen,
-    Store: StoreScreen
+const AppStack = createStackNavigator({
+	Home: HomeScreen,
+	Store: StoreScreen,
+	AsteroidDetection: AsteroidDetectionScreen
 });
 
-const AuthStack = createStackNavigator({ 
-    Login: LoginScreen, 
-    Register: RegisterScreen
+const AuthStack = createStackNavigator({
+	Login: LoginScreen,
+	Register: RegisterScreen
 });
 
 const AppContainer = createAppContainer(
-    createSwitchNavigator(
-    {
-        AuthLoading: AuthLoadingScreen,
-        App: AppStack,
-        Auth: AuthStack,
-    },
-    {
-        initialRouteName: 'AuthLoading',
-    }
-)
+	createSwitchNavigator(
+		{
+			AuthLoading: AuthLoadingScreen,
+			App: AppStack,
+			Auth: AuthStack
+		},
+		{
+			initialRouteName: 'AuthLoading'
+		}
+	)
 );
 
 export default function App() {
-    return (
-        <AppContainer />
-    );
+	return <AppContainer />;
 }
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fff',
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
+	container: {
+		flex: 1,
+		backgroundColor: '#fff',
+		alignItems: 'center',
+		justifyContent: 'center'
+	}
 });
