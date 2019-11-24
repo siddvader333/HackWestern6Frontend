@@ -145,7 +145,7 @@ export default class extends React.Component {
 			}else{
 				console.log(body)
 				await AsyncStorage.setItem('userToken', JSON.stringify(body))
-				this.props.navigation.navigate('App', { user: body, name: body.preferredname })
+				this.props.navigation.navigate('App', { user: body.user, name: body.user.preferredname })
 			}
 		}else{
 			this.errorAction(body.error)
