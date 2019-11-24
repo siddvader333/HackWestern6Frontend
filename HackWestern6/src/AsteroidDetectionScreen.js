@@ -28,7 +28,7 @@ export default class extends React.Component {
 					'Content-Type': 'application/json'
 				},
 				body: JSON.stringify({
-					utorid: this.state.user.utorid,
+					utorid: this.state.user.user.utorid,
 					asteroidName: this.state.asteroidName,
 					asteroidDate: this.state.asteroidDate,
 					value: this.state.asteroidValue
