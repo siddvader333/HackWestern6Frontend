@@ -12,37 +12,97 @@ import {
 	AsyncStorage
 } from 'react-native';
 import { Table, TableWrapper, Row, Rows, Col } from 'react-native-table-component';
+import route from '../api.js';
 
-const rhino_pic = <Image source={require('../assets/Rhino.png')} resizeMode="cover"/>
-const z_saber_pic = <Image source={require('../assets/Z-saber.png')} resizeMode="cover"/>
-const boltace_pic = <Image source={require('../assets/Boltace.png')} resizeMode="cover"/>
-const longsword_pic = <Image source={require('../assets/Longsword.png')} resizeMode="cover"/>
-const watermelon_pic = <Image source={require('../assets/Watermelon.png')} resizeMode="cover"/>
+const rhino_pic = (<Image key = '0' source={require('../assets/Rhino.png')} resizeMode="cover"/>)
+const z_saber_pic = <Image key = '1' source={require('../assets/Z-saber.png')} resizeMode="cover"/>
+const boltace_pic = <Image key = '2' source={require('../assets/Boltace.png')} resizeMode="cover"/>
+const longsword_pic = <Image key = '3'source={require('../assets/Longsword.png')} resizeMode="cover"/>
+const watermelon_pic = <Image key = '4' source={require('../assets/Watermelon.png')} resizeMode="cover"/>
 export default class extends Component {
    constructor(props) {
-      super(props) 
+      super(props);
       this.state = { 
         user: this.props.navigation.getParam('user',null),
-        storeAttributes: ['Store ID', 'Name', 'Rubies', 'Description'],
+        storeAttributes: ['Artifacts!'],
+        index:'0',
 
         artifacts: [
-            [rhino_pic],
-            [z_saber_pic],
-            [boltace_pic],
-            [longsword_pic],
-            [watermelon_pic]
-         ]
+            [<TouchableOpacity onPress={() => {this.setState({index:'0'}); this.shoppingAction();}}>
+                {rhino_pic}
+            </TouchableOpacity>],
+
+            [<TouchableOpacity onPress={()=>{this.setState({index:'1'}); this.shoppingAction();}}>
+                {z_saber_pic}
+            </TouchableOpacity>],
+
+        [<TouchableOpacity onPress={()=>{this.setState({index:'2'}); this.shoppingAction();}}>
+            {boltace_pic}
+            </TouchableOpacity>],
+
+            [<TouchableOpacity onPress={()=>{this.setState({index:'3'}); this.shoppingAction()}}>
+                {longsword_pic}
+                </TouchableOpacity>],
+
+            [<TouchableOpacity onPress={()=>{this.setState({index:'4'}); this.shoppingAction();}}>
+                {watermelon_pic}
+                </TouchableOpacity>]
+         ],
+
+         costs: {
+             '0':1000,
+             '1':500,
+             '2':250,
+             '3':100,
+             '4':50
+         },
+         names:{
+            '0':'Rhino',
+            '1':'Z-saber',
+            '2':'Boltace',
+            '3':'Longsword',
+            '4':'Watermelon'
+         }
       }
+      this.shoppingAction = this.shoppingAction.bind(this)
    }
 
-   componentDidMounts(){
+   shoppingAction = async() => {
+    // get the user information such as UTorID and gold/PNP points
+        console.log(this.state.user)
+        if(!this.state.user){
+            console.log("Error1")
+        }
+        
+        // do error handling
+        else{
+        // best to do this as a promise so i can invoke loading activity indicator
+        let response = await fetch(route('/buy_item'), {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                item: this.state.names[this.state.index],
+                cost: this.state.costs[this.state.index],
+                img: this.state.artifacts[this.state.index][0] 
+                })
+            })
+            if(response.ok){
+                console.log(body)
+            }
+        }
+    }
+
+   componentDidMount(){
       this.setState({
           user: this.props.navigation.getParam('user',null)
       })
    }
    
    render() {
-   
+    // console.log(this.state)
        return(
         <ScrollView vertical={true}>
             <View style = {styles.container}>
@@ -64,11 +124,6 @@ export default class extends Component {
 
 }
 
-shoppingAction = async() => {
-// get the user information such as UTorID and gold/PNP points
-
-
-}
 
 const styles = StyleSheet.create({
     container: { flex: 1, padding: 15, paddingTop: 30, backgroundColor: '#fff' },
