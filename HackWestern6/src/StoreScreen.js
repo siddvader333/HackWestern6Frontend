@@ -74,6 +74,9 @@ export default class extends Component {
             console.log("Error1")
         }
         
+        if(this.state.user.user.questData.gold < this.state.cost[this.state.index]){
+            console.log("User doesn't have enough money")
+        }
         // do error handling
         else{
         // best to do this as a promise so i can invoke loading activity indicator
@@ -86,7 +89,8 @@ export default class extends Component {
             body: JSON.stringify({
                 item: this.state.names[this.state.index],
                 cost: this.state.costs[this.state.index],
-                img: this.state.artifacts[this.state.index][0] 
+                img: this.state.artifacts[this.state.index][0],
+                utorid: this.state.user.user.utorid 
                 })
             })
             if(response.ok){
